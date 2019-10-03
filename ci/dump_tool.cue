@@ -14,12 +14,18 @@ objectSets: [
 
 command "dump-task": {
 	task print: cli.Print & {
-		text: yaml.MarshalStream([ o for o in kubernetes.tasks ])
+		text: yaml.MarshalStream([ v for v in kubernetes.tasks ])
 	}
 }
 
 command "dump-pipeline": {
 	task print: cli.Print & {
-		text: yaml.MarshalStream([ o for o in objects if o.kind == "Pipeline" ])
+		text: yaml.MarshalStream([ v for v in kubernetes.pipelines ])
+	}
+}
+
+command "dump-non-run": {
+	task print: cli.Print & {
+		text: yaml.MarshalStream([ v for v in kubernetes.pipelines & kubernetes.tasks & kubernetes.pipelineResources ])
 	}
 }

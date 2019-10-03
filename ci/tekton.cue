@@ -34,4 +34,10 @@ kubernetes tasks: {
 	}
 }
 
+kubernetes : {
+	pipelines :         pipeline
+	pipelineResources : pipelineResource
+	pipelineRuns :      pipelineRun
+}
+
 ParamTypeString :: v1alpha1.ParamTypeString

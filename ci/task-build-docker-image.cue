@@ -11,8 +11,8 @@ task "build-image-from-git-source": {
 				name: "pathToContext"
 				type: "string"
 				description:
-						"The directory containing the default.nix file"
-  			    default: { Type: ParamTypeString, StringVal: "/workspace/source"}
+					"The directory containing the default.nix file"
+				default: {Type: ParamTypeString, StringVal: "/workspace/source"}
 			}]
 		}
 		outputs resources: [{
@@ -23,7 +23,7 @@ task "build-image-from-git-source": {
 			name: "docker-config"
 			configMap name: "docker-config"
 		}]
-	    steps: [{ Container : {
+		steps: [{Container : {
 			name:  "build-and-push"
 			image: "docker.io/lewo/n2k8s:latest"
 			volumeMounts: [{
@@ -41,6 +41,6 @@ task "build-image-from-git-source": {
 				"--image-manifest-filepath",
 				"/builder/home/image-outputs/builtImage/index.json",
 			]
-	    }}]
+		}}]
 	}
 }
