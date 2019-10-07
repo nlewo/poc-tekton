@@ -31,8 +31,7 @@ task "deploy-using-kubectl": {
 			args: [
 				"-c",
 				"""
-                                cat $(inputs.params.path) | yq -rs '.[0].spec.template.spec.containers[0].image'
-                                | xargs -I '{}' skopeo inspect docker://'{}' | jq -e '.Digest == "$(inputs.resources.image.digest)"'
+                                cat $(inputs.params.path) | yq -rs '.[0].spec.template.spec.containers[0].image' | xargs -I '{}' skopeo inspect docker://'{}' | jq -e '.Digest == "$(inputs.resources.image.digest)"'
                                 """,
 			]
 		}}, {Container : {
