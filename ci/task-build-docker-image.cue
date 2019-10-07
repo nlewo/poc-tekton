@@ -8,11 +8,9 @@ task "build-image-from-git-source": {
 				type: "git"
 			}]
 			params: [{
-				name: "pathToContext"
-				type: "string"
-				description:
-					"The directory containing the default.nix file"
-				default: {Type: ParamTypeString, StringVal: "/workspace/source"}
+			    name: "pathToContext"
+			    description: "The directory containing the default.nix file"
+                            _defaultString: "/workspace/source"
 			}]
 		}
 		outputs resources: [{

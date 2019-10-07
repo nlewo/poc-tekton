@@ -12,7 +12,6 @@ task "deploy-using-kubectl": {
 			}]
 			params: [{
 				name:        "path"
-				type:        "string"
 				description: "Path to the manifest to apply"
 			}]
 		}

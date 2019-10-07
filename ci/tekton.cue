@@ -10,6 +10,19 @@ task <Name> : v1alpha1.Task & {
 	metadata name: Name
 }
 
+// This provides a helper to create a param of type string with a
+// default value.
+task <X> spec inputs params : [...{
+    _defaultString?: string
+    if "\(_defaultString)" != _|_ {
+        default: {
+            Type: ParamTypeString,
+            StringVal : _defaultString
+        }
+        type : "string"
+    }
+}]
+
 // This is where we convert Tekton extracted structure to structure that can be applied as Kubernetes resource
 kubernetes tasks: {
 	for k, x in task {

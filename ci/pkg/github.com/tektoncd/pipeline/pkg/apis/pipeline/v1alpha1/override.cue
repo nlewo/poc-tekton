@@ -12,3 +12,4 @@ Volume : corev1.Volume
 
 // String is allowd by default which is not constrained enough
 PipelineResourceType :: enumPipelineResourceType
+ParamType :: enumParamType
