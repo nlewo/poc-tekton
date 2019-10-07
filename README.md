@@ -6,6 +6,7 @@ The goal is to define a Pipeline to build and deploy a Go application.
 
 - A Kubernetes cluster
 - Tekton Pipelines is already deployed
+- Tekton Triggers is already deployed (for webhook handling)
 
 ### Getting Started
 
@@ -31,7 +32,7 @@ $ kubectl apply -f https://raw.githubusercontent.com/tektoncd/catalog/0b48da8e33
 We can now create the pipeline:
 
 ```
-$ kubectl apply -f ci/pipeline.yaml
+$ kubectl apply -f ci/build-deploy-pipeline.yaml
 ```
 
 To push to an authenticated registry, we need to expose a Docker
@@ -44,7 +45,7 @@ $ kubectl create configmap docker-config --from-file=~/.docker/config.json
 
 We can finally run the Pipeline:
 ```
-$ kubectl apply -f ci/pipeline-run.yaml
+$ kubectl apply -f ci/hello-world-pipeline-run.yaml
 ```
 
 #### Display logs
@@ -61,3 +62,32 @@ application:
 $ curl $(kubectl get svc hello-world -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
 hello world
 ```
+
+#### Enable webhook (triggers)
+
+First an eventlistener must be created. This listener has a public IP which
+will be used when configuring the github webhook. A secret is set on webhook creation
+so that the incoming events can be validated by tekton. The webhook secret is also stored
+in a k8s secret.
+
+The secret is validated with a tekton task which needs to be installed.
+
+```
+$ kubectl apply -f ci/eventlistener.yaml
+$ sed 's/GITHUB_WEBHOOK_TOKEN/secret/' ci/hello-world-webook-secret.yaml | kubectl apply -f -
+$ kubectl apply -f ci/task-validate-github-event.yaml
+```
+
+Finally the trigger bindings and templates:
+
+```
+$ kubectl apply -f ci/triggerbinding-github.yaml
+$ kubectl apply -f ci/hello-world-triggertemplate.yaml
+```
+
+When a github event is received by the `eventlistener` it is first validated by
+the `validate-github-event` task. Then the `triggerbinding` binds some of the
+event values to params which are given to the `triggertemplate`.
+
+The `triggertemplate` defines the list of resources to be created in our case a
+`pipelinerun` for the hello-world project.

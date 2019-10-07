@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: eventlistener
+spec:
+  public: true
+  triggers:
+    - name: hello-world-trigger
+      binding:
+        name: github-binding
+      template:
+        name: hello-world-pipeline-template
+      validate:
+        taskRef:
+         name: validate-github-event
+        params:
+        - name: Github-Secret
+          value: hello-world-github-secret
+        - name: Github-Secret-Key
+          value: secretToken

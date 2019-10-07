@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: poc-repo
+spec:
+  type: git
+  params:
+    - name: revision
+      value: master
+    - name: url
+      value: https://github.com/nlewo/poc-tekton
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: hello-world-image
+spec:
+  type: image
+  params:
+    - name: url
+      value: lewo/tekton-hello-world
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: hello-world-pipeline-run
+spec:
+  pipelineRef:
+    name: hello-world-pipeline
+  resources:
+    - name: poc-repo
+      resourceRef:
+        name: poc-repo
+    - name: app-image
+      resourceRef:
+        name: hello-world-image
