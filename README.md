@@ -32,7 +32,7 @@ $ kubectl apply -f https://raw.githubusercontent.com/tektoncd/catalog/0b48da8e33
 We can now create the pipeline:
 
 ```
-$ kubectl apply -f ci/pipeline.yaml
+$ kubectl apply -f ci/build-deploy-pipeline.yaml
 ```
 
 To push to an authenticated registry, we need to expose a Docker
@@ -45,7 +45,7 @@ $ kubectl create configmap docker-config --from-file=~/.docker/config.json
 
 We can finally run the Pipeline:
 ```
-$ kubectl apply -f ci/pipeline-run.yaml
+$ kubectl apply -f ci/hello-world-pipeline-run.yaml
 ```
 
 #### Display logs

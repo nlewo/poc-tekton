@@ -42,11 +42,11 @@ spec:
           generatedBy: "hello-world-trigger"
       spec:
         pipelineRef:
-            name: hello-world-pipeline
+            name: build-deploy-pipeline
         resources:
-        - name: poc-repo
+        - name: source-repo
           resourceRef:
             name: poc-repo-$(uid)
-        - name: app-image
+        - name: docker-image
           resourceRef:
             name: hello-world-image-$(uid)

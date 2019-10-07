@@ -1,37 +1,15 @@
 apiVersion: tekton.dev/v1alpha1
-kind: PipelineResource
-metadata:
-  name: poc-repo
-spec:
-  type: git
-  params:
-    - name: revision
-      value: master
-    - name: url
-      value: https://github.com/nlewo/poc-tekton
----
-apiVersion: tekton.dev/v1alpha1
-kind: PipelineResource
-metadata:
-  name: hello-world-image
-spec:
-  type: image
-  params:
-    - name: url
-      value: lewo/tekton-hello-world
----
-apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  name: hello-world-pipeline
+  name: build-deploy-pipeline
 spec:
   resources:
-    - name: poc-repo
+    - name: source-repo
       type: git
-    - name: app-image
+    - name: docker-image
       type: image
   tasks:
-    - name: build-app
+    - name: build-image
       taskRef:
         name: build-image-from-git-source
       params:
@@ -40,23 +18,23 @@ spec:
       resources:
         inputs:
           - name: source
-            resource: poc-repo
+            resource: source-repo
         outputs:
           - name: builtImage
-            resource: app-image
+            resource: docker-image
 
     # This is a workaround because the digest is not updated yet by tekton.
     # See https://github.com/tektoncd/pipeline/issues/216 and https://github.com/tektoncd/catalog/pull/68
     - name: update-digest
       params:
         - name: pipelineTask
-          value: build-app
+          value: build-image
       runAfter:
-        - build-app
+        - build-image
       taskRef:
         name: update-image-digests
 
-    - name: deploy-app
+    - name: deploy-image
       taskRef:
         name: deploy-using-kubectl
       runAfter:
@@ -67,6 +45,6 @@ spec:
       resources:
         inputs:
           - name: source
-            resource: poc-repo
+            resource: source-repo
           - name: image
-            resource: app-image
+            resource: docker-image
