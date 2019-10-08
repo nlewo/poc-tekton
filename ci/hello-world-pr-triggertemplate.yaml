@@ -1,0 +1,89 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: hello-world-pipeline-pr-template
+spec:
+  params:
+    - name: pullrequesturl
+      description: Pull request URL
+    - name: gitrevision
+      description: The git revision
+      default: master
+    - name: gitrepositoryurl
+      description: The git repository url
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineResource
+      metadata:
+        name: github-pr-$(uid)
+      spec:
+        type: pullRequest
+        params:
+          - name: url
+            value: $(params.pullrequesturl)
+        secrets:
+          - fieldName: githubToken
+            secretKey: accessToken
+            secretName: github-token
+    - apiVersion: tekton.dev/v1alpha1
+      kind: TaskRun
+      metadata:
+        name: monitor-pr-task-$(uid)
+      spec:
+        taskRef:
+          name: monitor-result-task
+        inputs:
+          params:
+            - name: pipelineruns
+              value: hello-world-pipeline-run-$(uid):default:build-deploy-pipeline
+            - name: secret
+              value: github-token
+          resources:
+            - name: pull-request
+              resourceRef:
+                name: github-pr-$(uid)
+        outputs:
+          resources:
+            - name: pull-request
+              resourceRef:
+                name: github-pr-$(uid)
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineResource
+      metadata:
+        name: poc-repo-$(uid)
+        labels:
+          triggertemplated: "true"
+          generatedBy: "hello-world-trigger"
+      spec:
+        type: git
+        params:
+        - name: revision
+          value: $(params.gitrevision)
+        - name: url
+          value: $(params.gitrepositoryurl)
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineResource
+      metadata:
+        name: hello-world-image-$(uid)
+      spec:
+        type: image
+        params:
+          - name: url
+            value: lewo/tekton-hello-world
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineRun
+      metadata:
+        name: hello-world-pipeline-run-$(uid)
+        labels:
+          triggertemplated: "true"
+          generatedBy: "hello-world-trigger"
+      spec:
+        pipelineRef:
+            name: build-deploy-pipeline
+        resources:
+        - name: source-repo
+          resourceRef:
+            name: poc-repo-$(uid)
+        - name: docker-image
+          resourceRef:
+            name: hello-world-image-$(uid)

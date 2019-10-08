@@ -18,3 +18,8 @@ spec:
           value: hello-world-github-secret
         - name: Github-Secret-Key
           value: secretToken
+    - name: hello-world-pr-trigger
+      binding:
+        name: github-pullrequest-binding
+      template:
+        name: hello-world-pipeline-pr-template

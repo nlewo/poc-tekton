@@ -1,0 +1,12 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: github-pullrequest-binding
+spec:
+  params:
+    - name: pullrequesturl
+      value: $(event.pull_request.html_url)
+    - name: gitrevision
+      value: $(event.pull_request.head.sha)
+    - name: gitrepositoryurl
+      value: $(event.pull_request.head.repo.html_url)
