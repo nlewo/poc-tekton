@@ -1,0 +1,9 @@
+build-and-deploy:
+  image:
+    name: lewo/tekton-hello-world
+  repository:
+    url: http://github.com/nlewo/poc-tekton
+  secrets:
+    docker:
+      url: docker.io
+    

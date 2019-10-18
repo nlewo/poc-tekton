@@ -1,0 +1,6 @@
+dependencies:
+- name: build-and-deploy
+  repository: http://127.0.0.1:8879
+  version: 0.1.0
+digest: sha256:d2c78c37b07798e3b32992226eaffbd3448b0ca3252a38f4c27bf39277381e11
+generated: "2019-10-18T10:13:51.012986797+02:00"
