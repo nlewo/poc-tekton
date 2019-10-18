@@ -92,4 +92,4 @@ event values to params which are given to the `triggertemplate`.
 The `triggertemplate` defines the list of resources to be created in our case a
 `pipelinerun` for the hello-world project.
 
-Test
+Foo
