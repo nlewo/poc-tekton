@@ -1,6 +1,6 @@
 dependencies:
-- name: build-and-deploy
+- name: build-and-deploy-nix
   repository: http://127.0.0.1:8879
   version: 0.1.0
-digest: sha256:d2c78c37b07798e3b32992226eaffbd3448b0ca3252a38f4c27bf39277381e11
-generated: "2019-10-18T13:49:04.14780552+02:00"
+digest: sha256:438f97b7b1f676a30765465f593c5d42ed6a4ece2da7bf824f394d1480be9fc4
+generated: "2019-10-21T17:11:50.485142469+02:00"

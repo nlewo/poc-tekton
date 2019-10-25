@@ -1,0 +1,13 @@
+global:
+  ci:
+    namespace: branch-name
+    repository:
+      url: http://github.com/nlewo/poc-tekton
+      revision: tekton
+    uid: 12345
+
+
+    secrets:
+      docker:
+        username:
+          "lewo"

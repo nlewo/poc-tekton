@@ -1,7 +1,10 @@
-build-and-deploy:
-  image:
-    name: lewo/tekton-hello-world
+build-and-deploy-nix:
   secrets:
     docker:
-      url: docker.io
-    
+      url: "docker.io"
+  image:
+    name: "poc-tekton"
+
+
+
+      
