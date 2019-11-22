@@ -1,0 +1,6 @@
+build-with-nix-deploy-with-helm:
+  image:
+    name: "lewo/poc-tekton"
+  secrets:
+    docker:
+      url: "docker.io"
