@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: docker.io/lewo/tekton-hello-world:d06r0v79f7v375fzplv6yc6025v8cyxf
+        image: {{ .Values.image }}
         ports:
         - containerPort: 8080
           name: hello-world
@@ -39,20 +39,23 @@ spec:
     targetPort: 8080
   selector:
     app: hello-world
-  type: LoadBalancer
 ---
-- kind: Ingress
-  apiVersion: networking.k8s.io/v1beta1
-  metadata:
-    name: hello-world
-    annotations:
-      kubernetes.io/ingress.class: nginx
-  spec:
-    rules:
-    - host: helm-serve-{{ .}}84-39-53-90.nip.io
-      http:
-        paths:
-        - path: /
-          backend:
-            serviceName: helm-serve
-            servicePort: 8879
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: hello-world
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+{{ if eq .Values.global.ci.repository.branch "master" }}
+  - host: poc-tekton-{{ .Values.global.ci.ingress }}.nip.io
+{{ else }}      
+  - host: {{ .Values.global.ci.repository.branch }}-poc-tekton-{{ .Values.global.ci.ingress }}.nip.io
+{{ end }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: hello-world
+          servicePort: 80

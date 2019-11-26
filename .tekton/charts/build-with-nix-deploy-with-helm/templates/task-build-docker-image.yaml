@@ -1,7 +1,10 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
+  namespace: {{ .Values.global.ci.namespace }}
   name: build-image-from-git-source
+  annotations:
+    kapp.k14s.io/change-group: "ci/resources"
 spec:
   inputs:
     resources:
@@ -17,16 +20,9 @@ spec:
     resources:
       - name: builtImage
         type: image
-  volumes:
-    - name: docker-config
-      configMap:
-        name: docker-config
   steps:
     - name: build-and-push
       image: docker.io/lewo/n2k8s:latest
-      volumeMounts:
-        - name: docker-config
-          mountPath: /builder/home/.docker/
       command:
         - /entrypoint
       args:
